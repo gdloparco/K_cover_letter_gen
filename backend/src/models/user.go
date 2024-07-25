@@ -6,10 +6,9 @@ import (
 
 type User struct {
 	gorm.Model        // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
-	Email      string `json:"email"`
-	Password   string `json:"password"`
-	Username   string `json:"username"`
-	PhotoURL   string `json:"image"`
+	Bulletpoint      string `json:"bulletpoint"`
+	Tags   string `json:"tags"`
+	Category   string `json:"category"`
 }
 
 // This function creates a new record in the database

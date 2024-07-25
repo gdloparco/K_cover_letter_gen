@@ -37,9 +37,6 @@ func OpenDatabaseConnection() {
 	// and it would refer to a slightly different environment variable:
 	// POSTGRES_URL_EXTERNAL = "PROTOCOL (postgres) :// USERNAME : PASSWORD @ HOSTNAME . frankfurt-postgres.render.com / DATABASE NAME"
 
-	fmt.Println(connection_string)
-	// prints the connection string on the backend terminal for debugging purposes
-
 	var err error
 	// err variable will capture any errors that might occur in the following line.
 	Database, err = gorm.Open(postgres.Open(connection_string), &gorm.Config{})
