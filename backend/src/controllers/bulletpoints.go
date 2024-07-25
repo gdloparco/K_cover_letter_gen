@@ -8,16 +8,15 @@ import (
 
 
 func CreateUser(ctx *gin.Context) {
-	var newUser models.User // Creates a variable called newUser with the User struct type User{gorm.Model(id,...), email, password}
 
-	newUser = models.User{
+	newBulletpoint := models.Bulletpoint{
 		// Update user fields with file information
 		Bulletpoint:    ctx.PostForm("bulletpoint"),
 		Tags: ctx.PostForm("tags"),
 		Category: ctx.PostForm("category"),
 	}
 
-	_, err := newUser.Save() // Adds newUser to database
+	_, err := newBulletpoint.Save() // Adds newUser to database
 
 	if err != nil {
 		SendInternalError(ctx, err)
@@ -25,7 +24,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "newUser": newUser}) //sends confirmation message back if successfully saved
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "newBulletpoint": newBulletpoint}) //sends confirmation message back if successfully saved
 }
 
 // func GetUser(ctx *gin.Context) {
