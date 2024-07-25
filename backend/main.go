@@ -16,11 +16,13 @@ func main() {
 	models.OpenDatabaseConnection()
 	models.AutoMigrateModels()
 	
+	// TESTER BELOW
 	app.GET("/tester", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "all fine here",
 		})
 	})
+	// TESTER ABOVE
 
 	app.Run(":8082")
 
