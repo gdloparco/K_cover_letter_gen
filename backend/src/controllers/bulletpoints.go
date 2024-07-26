@@ -39,6 +39,7 @@ func CreateUser(ctx *gin.Context) {
 // 		return
 // 	}
 
+
 // 	userIDString := userIDToken.(string)
 
 // 	loggedUserID := strconv.Itoa(int([]byte(userIDString)[0]))
