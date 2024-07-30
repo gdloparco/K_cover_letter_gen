@@ -56,6 +56,18 @@ func CreateBulletpoint(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Bulletpoint created", "Bulletpoint": newBulletpoint.Bulletpoint})
 }
 
+func GetAllBulletpoints(ctx *gin.Context) {
+
+	bulletpoint, err := models.FindAllBulletpoints()
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
+}
+
+
 func GetBulletpointByTag(ctx *gin.Context) {
 	tag := ctx.Param("tag")
 

@@ -23,8 +23,20 @@ func (bulletpoint *Bulletpoint) Save() (*Bulletpoint, error) {
 	return bulletpoint, nil
 }
 
+// FindAllBulletpoints() finds and returns all bulletpoints records in the database
+func FindAllBulletpoints() (*[]Bulletpoint, error) {
+	var bulletpoints []Bulletpoint
 
-// FindBulletpointByTag(tag) finds and returns all bulletpoints record in the database where the tag matches the parameter
+	err := Database.Find(&bulletpoints).Error
+
+	if err != nil {
+		return &[]Bulletpoint{}, err
+	}
+
+	return &bulletpoints, nil
+}
+
+// FindBulletpointByTag(tag) finds and returns all bulletpoints records in the database where the tag matches the parameter
 func FindBulletpointByTag(tag string) (*[]Bulletpoint, error) {
 	var bulletpoints []Bulletpoint
 
@@ -38,7 +50,7 @@ func FindBulletpointByTag(tag string) (*[]Bulletpoint, error) {
 }
 
 
-// FindBulletpointByCategory(category) finds and returns all bulletpoints record in the database where the category matches the parameter
+// FindBulletpointByCategory(category) finds and returns all bulletpoints records in the database where the category matches the parameter
 func FindBulletpointByCategory(category string) (*[]Bulletpoint, error) {
 	var bulletpoints []Bulletpoint
 
