@@ -68,7 +68,7 @@ func GetAllBulletpoints(ctx *gin.Context) {
 }
 
 
-func GetBulletpointByTag(ctx *gin.Context) {
+func GetBulletpointsByTag(ctx *gin.Context) {
 	tag := ctx.Param("tag")
 
 	bulletpoint, err := models.FindBulletpointByTag(tag)
@@ -81,7 +81,7 @@ func GetBulletpointByTag(ctx *gin.Context) {
 }
 
 
-func GetBulletpointByCategory(ctx *gin.Context) {
+func GetBulletpointsByCategory(ctx *gin.Context) {
 	category := ctx.Param("category")
 
 	bulletpoint, err := models.FindBulletpointByCategory(category)
@@ -104,4 +104,15 @@ func GetSuperhookByTag(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
+}
+
+func GetAllSuperhooks(ctx *gin.Context) {
+
+	superhooks, err := models.FindAllSuperhooks()
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"superhooks": superhooks})
 }

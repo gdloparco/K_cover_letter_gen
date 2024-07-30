@@ -74,3 +74,15 @@ func FindSuperhookByTag(tag string) (*Bulletpoint, error) {
 
 	return &bulletpoint, nil
 }
+
+func FindAllSuperhooks() (*[]Bulletpoint, error) {
+	var superhooks []Bulletpoint
+
+	err := Database.Where("category = ?", "Superhook").Find(&superhooks).Error
+
+	if err != nil {
+		return &[]Bulletpoint{}, err
+	}
+
+	return &superhooks, nil
+}
