@@ -8,7 +8,7 @@ import (
 
 type bulletpointRequestBody struct {
 	Bulletpoint string
-	Tags 		string
+	Tag 		string
 	Category 	string
 }
 
@@ -20,7 +20,7 @@ func CreateBulletpoint(ctx *gin.Context) {
 	// and attempts to match the JSON fields with the fields in the requestBody struct
 	// if the JSON payload has a field named "bulletpoint" it assigns the corresponding
 	// value to the Bulletpoint field of the requestBody
-	
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
@@ -31,7 +31,7 @@ func CreateBulletpoint(ctx *gin.Context) {
 		return
 	}
 
-	if len(requestBody.Tags) == 0 {
+	if len(requestBody.Tag) == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Tags field empty"})
 		return
 	}
@@ -43,7 +43,7 @@ func CreateBulletpoint(ctx *gin.Context) {
 
 	newBulletpoint := models.Bulletpoint{
 		Bulletpoint: 	requestBody.Bulletpoint,
-		Tags:   		requestBody.Tags,
+		Tag:   			requestBody.Tag,
 		Category: 		requestBody.Category,
 	}
 

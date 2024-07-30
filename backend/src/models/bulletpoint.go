@@ -7,7 +7,7 @@ import (
 type Bulletpoint struct {
 	gorm.Model
 	Bulletpoint     string `json:"bulletpoint"`
-	Tags   			string `json:"tags"`
+	Tag   			string `json:"tag"`
 	Category   		string `json:"category"`
 }
 
@@ -42,7 +42,7 @@ func FindBulletpointByTag(tag string) (*[]Bulletpoint, error) {
 func FindBulletpointByCategory(category string) (*[]Bulletpoint, error) {
 	var bulletpoints []Bulletpoint
 
-	err := Database.Where("tag = ?", category).Find(&bulletpoints).Error
+	err := Database.Where("category = ?", category).Find(&bulletpoints).Error
 
 	if err != nil {
 		return &[]Bulletpoint{}, err
