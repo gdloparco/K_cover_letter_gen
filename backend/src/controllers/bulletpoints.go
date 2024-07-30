@@ -6,50 +6,77 @@ import (
 	"net/http"
 )
 
+type bulletpointRequestBody struct {
+	Bulletpoint string
+	Tags 		string
+	Category 	string
+}
 
-func CreateUser(ctx *gin.Context) {
+func CreateBulletpoint(ctx *gin.Context) {
+	var requestBody bulletpointRequestBody
 
-	newBulletpoint := models.Bulletpoint{
-		// Update user fields with file information
-		Bulletpoint:    ctx.PostForm("bulletpoint"),
-		Tags: ctx.PostForm("tags"),
-		Category: ctx.PostForm("category"),
+	err := ctx.BindJSON(&requestBody)
+	// ctx.BindJSON reads the JSON payload from the request body it parses the JSON payload
+	// and attempts to match the JSON fields with the fields in the requestBody struct
+	// if the JSON payload has a field named "bulletpoint" it assigns the corresponding
+	// value to the Bulletpoint field of the requestBody
+	
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
 	}
 
-	_, err := newBulletpoint.Save() // Adds newUser to database
+	if len(requestBody.Bulletpoint) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bulletpoint field empty"})
+		return
+	}
 
+	if len(requestBody.Tags) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Tags field empty"})
+		return
+	}
+
+	if len(requestBody.Category) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Category field empty"})
+		return
+	}
+
+	newBulletpoint := models.Bulletpoint{
+		Bulletpoint: 	requestBody.Bulletpoint,
+		Tags:   		requestBody.Tags,
+		Category: 		requestBody.Category,
+	}
+
+	_, err = newBulletpoint.Save()
 	if err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
 
-
-	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "newBulletpoint": newBulletpoint}) //sends confirmation message back if successfully saved
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Bulletpoint created", "Bulletpoint": newBulletpoint.Bulletpoint})
 }
 
-// func GetUser(ctx *gin.Context) {
-// 	// userID := ctx.Param("id") // This is to check response in postman
+func GetBulletpointByTag(ctx *gin.Context) {
+	tag := ctx.Param("tag")
 
-// 	// The below two lines of code are to extract userID from token when that functionality becomes possible
-// 	// val, _ := ctx.Get("userID")
-// 	// userID := val.(string)
-// 	userIDToken, exists := ctx.Get("userID")
-// 	if !exists {
-// 		ctx.JSON(http.StatusUnauthorized, gin.H{"ERROR": "USER ID NOT FOUND IN CONTEXT"})
-// 		return
-// 	}
+	bulletpoint, err := models.FindBulletpointByTag(tag)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
+}
 
 
-// 	userIDString := userIDToken.(string)
+func GetBulletpointByCategory(ctx *gin.Context) {
+	category := ctx.Param("category")
 
-// 	loggedUserID := strconv.Itoa(int([]byte(userIDString)[0]))
+	bulletpoint, err := models.FindBulletpointByCategory(category)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
 
-// 	token, _ := auth.GenerateToken(loggedUserID)
-// 	user, err := models.FindUser(loggedUserID)
-// 	if err != nil {
-// 		SendInternalError(ctx, err)
-// 		return
-// 	}
-
-// 	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": token, "loggedUserID": loggedUserID})
-// }
+	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
+}

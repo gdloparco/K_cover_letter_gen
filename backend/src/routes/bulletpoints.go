@@ -8,6 +8,8 @@ import (
 func setupBulletpointRoutes(baseRouter *gin.RouterGroup) {
 	bulletpoints := baseRouter.Group("/bulletpoints")
 
-	bulletpoints.POST("", controllers.CreateUser)
-	// bulletpoints.GET("", controllers.GetUser)
+	bulletpoints.POST("", controllers.CreateBulletpoint)
+	bulletpoints.GET("/:tag", controllers.GetBulletpointByTag)
+	bulletpoints.GET("/:category", controllers.GetBulletpointByCategory)
+
 }

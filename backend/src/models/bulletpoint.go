@@ -5,20 +5,17 @@ import (
 )
 
 type Bulletpoint struct {
-	gorm.Model        // gorm.Model creates the following common fields automatically; ID (unit / gorm:"primaryKey"), CreatedAt (time.Time), UpdatedAt(time.Time), DeletedAt (gorm.DeletedAt / gorm:"index")
-	Bulletpoint      string `json:"bulletpoint"`
-	Tags   string `json:"tags"`
-	Category   string `json:"category"`
+	gorm.Model
+	Bulletpoint     string `json:"bulletpoint"`
+	Tags   			string `json:"tags"`
+	Category   		string `json:"category"`
 }
 
-// This function creates a new record in the database
+// The Save() function creates a new bulletpoint record in the database
 func (bulletpoint *Bulletpoint) Save() (*Bulletpoint, error) {
-	// existingUser, err := FindUserByEmail(user.Email)
-	// if existingUser != nil {
-	// 	return &User{}, err
-	// }
 
 	err := Database.Create(bulletpoint).Error
+
 	if err != nil {
 		return &Bulletpoint{}, err
 	}
@@ -26,32 +23,32 @@ func (bulletpoint *Bulletpoint) Save() (*Bulletpoint, error) {
 	return bulletpoint, nil
 }
 
-// // FindUser(id) finds and returns the first record in the database where the id matches the id given
-// func FindUser(id string) (*User, error) {
-// 	var user User
-// 	err := Database.Where("id = ?", id).First(&user).Error
 
-// 	if err != nil {
-// 		return &User{}, err
-// 	}
+// FindBulletpointByTag(tag) finds and returns all bulletpoints record in the database where the tag matches the parameter
+func FindBulletpointByTag(tag string) (*[]Bulletpoint, error) {
+	var bulletpoints []Bulletpoint
 
-// 	return &user, nil
-// }
+	err := Database.Where("tag = ?", tag).Find(&bulletpoints).Error
 
-// // FindUserByEmail(email) finds and returns the first record in the database where the email matches the email given
-// func FindUserByEmail(email string) (*User, error) {
-// 	var user User
-// 	err := Database.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return &[]Bulletpoint{}, err
+	}
 
-// 	if err != nil && err == gorm.ErrRecordNotFound {
-// 		return nil, nil
-// 	}
+	return &bulletpoints, nil
+}
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
 
-// 	return &user, nil
-// }
+// FindBulletpointByCategory(category) finds and returns all bulletpoints record in the database where the category matches the parameter
+func FindBulletpointByCategory(category string) (*[]Bulletpoint, error) {
+	var bulletpoints []Bulletpoint
+
+	err := Database.Where("tag = ?", category).Find(&bulletpoints).Error
+
+	if err != nil {
+		return &[]Bulletpoint{}, err
+	}
+
+	return &bulletpoints, nil
+}
 
 
