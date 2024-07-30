@@ -26,21 +26,6 @@ func CreateBulletpoint(ctx *gin.Context) {
 		return
 	}
 
-	if len(requestBody.Bulletpoint) == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bulletpoint field empty"})
-		return
-	}
-
-	if len(requestBody.Tag) == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Tags field empty"})
-		return
-	}
-
-	if len(requestBody.Category) == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Category field empty"})
-		return
-	}
-
 	newBulletpoint := models.Bulletpoint{
 		Bulletpoint: 	requestBody.Bulletpoint,
 		Tag:   			requestBody.Tag,
