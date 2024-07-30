@@ -12,5 +12,6 @@ func setupBulletpointRoutes(baseRouter *gin.RouterGroup) {
 	bulletpoints.GET("", controllers.GetAllBulletpoints)
 	bulletpoints.GET("/tag/:tag", controllers.GetBulletpointByTag)
 	bulletpoints.GET("/category/:category", controllers.GetBulletpointByCategory)
+	bulletpoints.GET("/superhook/:tag", controllers.GetSuperhookByTag)
 
 }

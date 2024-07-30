@@ -63,4 +63,14 @@ func FindBulletpointByCategory(category string) (*[]Bulletpoint, error) {
 	return &bulletpoints, nil
 }
 
+func FindSuperhookByTag(tag string) (*Bulletpoint, error) {
+	var bulletpoint Bulletpoint
 
+	err := Database.Where("category = ? AND tag = ?", "Superhook", tag).First(&bulletpoint).Error
+
+	if err != nil {
+		return &Bulletpoint{}, err
+	}
+
+	return &bulletpoint, nil
+}

@@ -92,3 +92,16 @@ func GetBulletpointByCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
 }
+
+
+func GetSuperhookByTag(ctx *gin.Context) {
+	tag := ctx.Param("tag")
+
+	bulletpoint, err := models.FindSuperhookByTag(tag)
+	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
+}
