@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: docker_nextjs_for_kgen:development
+    working_dir: /frontend
+    volumes:
+      - /mnt/c/Users/Giandomenico/Desktop/GitHub/7-cover_letter_gen/frontend:/frontend
+    ports:
+      - "3000:3000"
+    command: npm run dev
