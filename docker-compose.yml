@@ -1,21 +1,9 @@
-# services:
-#   frontend:
-#     image: docker_nextjs_for_kgen:development
-#     working_dir: /frontend
-#     volumes:
-#       - /mnt/c/Users/Giandomenico/Desktop/GitHub/7-cover_letter_gen/frontend:/frontend
-#     ports:
-#       - "3000:3000"
-#     command: npm run dev
-
 services:
   db:
     image: postgres:16.3-alpine3.20
     container_name: k_gen_database
     restart: always
-    # set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
     environment:
       POSTGRES_PASSWORD: safepassword
     volumes:
