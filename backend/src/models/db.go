@@ -2,7 +2,9 @@ package models
 
 import (
 	"fmt"
+
 	"gorm.io/driver/postgres"
+
 	// provides the PostgreSQL database driver for GORM, allowing communication
 	// with a PostgreSQL database.
 	"gorm.io/gorm"
@@ -25,7 +27,16 @@ var Database *gorm.DB
 
 func OpenDatabaseConnection() {
 	// function responsible for establishing a connection to the PostgreSQL database.
-	connection_string := os.Getenv("DB_URL")
+
+	connection_string := os.Getenv("DOCKER_DB_URL")
+
+	if connection_string == "" {
+		connection_string = os.Getenv("DB_URL")
+		fmt.Println("Connected to Local DB_URL")
+	} else {
+		fmt.Println("Connected to DOCKER_DB_URL")
+	}
+
 	// This code retrieves the PostgreSQL connection string from the environment variable
 	// POSTGRES_URL = "PROTOCOL(postgres) :// HOST_IP (localhost and port) / DATABASE_NAME"
 

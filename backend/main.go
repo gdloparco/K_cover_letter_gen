@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"cl-generator/src/env"
 	"cl-generator/src/models"
 	"cl-generator/src/routes"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 
 	models.OpenDatabaseConnection()
 	models.AutoMigrateModels()
-	
+
 	// TESTER BELOW
 	app.GET("/tester", func(c *gin.Context) {
 		c.JSON(200, gin.H{
