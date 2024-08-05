@@ -17,10 +17,10 @@ export default function Home() {
               height={96}
             />
           </div>
-          <h1 className="text-3xl font-bold">God exists</h1>
+          <h1 className="text-3xl font-bold">Title</h1>
           <p className="text-center max-w-md">Description of your homepage.</p>
           <button className="px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">
-            Get Started
+            Button
           </button>
         </div>
       </main>
