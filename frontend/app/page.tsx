@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-      <div className="bg-amber-300 min-h-screen flex flex-col items-center justify-center">
+      <div className="bg-amber-300 min-h-svh flex flex-col items-center justify-center">
         <main className="flex flex-col items-center justify-center py-10">
           <div className="flex flex-col items-center space-y-6">
             <div className="md:py-5 lg:py-10">
