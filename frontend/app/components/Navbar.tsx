@@ -58,7 +58,7 @@ export default function Navbar() {
         </div>
         {/* <!-- Primary Navigation --> */}
         <div className="hidden md:flex md:flex-row flex-col items-center justify-start md:space-x-1 navigation-menu pb-3 md:pb-0 text-2xl">
-          <a href="#" className="font-Permanent_Marker py-2 px-3 block">
+          <a href="#" className="font-permanent py-2 px-3 block">
             Home
           </a>
           <a href="#" className="py-2 px-3 block">

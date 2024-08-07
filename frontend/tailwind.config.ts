@@ -17,7 +17,7 @@ const config: Config = {
       fontFamily: {
         // Ubuntu: ['"Ubuntu"', "sans-serif"],
         // Prompt: ['"Prompt"', "sans-serif"],
-        Permanent_Marker: ['"Permanent_Marker"', "sans-serif"],
+        permanent: ['"Permanent Marker"'],
         // Pacifico: ['"Pacifico"', "sans-serif"],
       },
     },
