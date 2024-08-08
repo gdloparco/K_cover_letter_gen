@@ -8,6 +8,13 @@ interface NavbarProps {
 
 export default function Navbar({logoImage}: NavbarProps) {
 
+  let Links =[
+    {name: 'Home', link: '/'},
+    {name: 'About', link: '/'},
+    {name: 'Contact', link: '/'},
+
+  ]
+
   return (
     // <nav className="sticky top-0 z-50 bg-purple-900 shadow-md w-full">
     //   <div className="mx-auto px-6 md:px-8 lg:px-10 py-6 lg:py-8">
@@ -28,9 +35,11 @@ export default function Navbar({logoImage}: NavbarProps) {
     //     </div>
     //   </div>
     // </nav>
-    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300 shadow-2xl">
-      <div className="container max-w-full mr-auto px-6 md:px-8 lg:px-10 py-5 lg:py-6 md:flex items-center gap-6">
-        {/* <!-- Logo --> */}
+    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300 shadow-2xl font-Kanit">
+      <div className="md:px-10 py-4 px-7 md:flex justify-between items-center">
+
+        {/* Logo  */}
+
         <div className="flex items-center justify-between md:w-auto w-full">
           <Image
             className="lg:w-14"
@@ -39,8 +48,20 @@ export default function Navbar({logoImage}: NavbarProps) {
             width={45}
             height={45}
           />
-          {/* <!-- Mobile Menu Button --> */}
-          <div className="md:hidden flex items-center">
+
+        {/* Nav Links  */}
+
+        <ul className='md:flex pl-9 md:pl-0 text-xl lg:text-2xl'>
+          {
+            Links.map(link => (
+            <li className='my-7 md:my-0 md:ml-8'>
+              <a href='/'>{link.name}</a>
+            </li>))
+          }
+        </ul>
+ 
+
+          {/* <div className="md:hidden flex items-center">
             <button className="mobile-menu-button">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +83,6 @@ export default function Navbar({logoImage}: NavbarProps) {
             </button>
           </div>
         </div>
-        {/* <!-- Primary Navigation --> */}
         <div className="hidden md:flex md:flex-row flex-col items-center justify-start space-x-1 lg:space-x-3 navigation-menu pb-3 md:pb-0 text-3xl lg:text-4xl font-Kanit">
           <a href="#" className="py-2 px-3 block">
             Home
@@ -72,7 +92,7 @@ export default function Navbar({logoImage}: NavbarProps) {
           </a>
           <a href="#" className="py-2 px-3 block">
             Contact
-          </a>
+          </a> */}
         </div>
       </div>
     </nav>
