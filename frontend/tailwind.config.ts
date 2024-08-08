@@ -1,4 +1,4 @@
-import { Permanent_Marker } from "next/font/google";
+import { Kanit } from "next/font/google";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -15,10 +15,7 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-        // Ubuntu: ['"Ubuntu"', "sans-serif"],
-        // Prompt: ['"Prompt"', "sans-serif"],
-        permanent: ['"Permanent Marker"'],
-        // Pacifico: ['"Pacifico"', "sans-serif"],
+        Kanit: ['"Kanit"', "sans-serif"],
       },
     },
   },
