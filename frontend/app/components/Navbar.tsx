@@ -28,7 +28,7 @@ export default function Navbar({logoImage}: NavbarProps) {
     //     </div>
     //   </div>
     // </nav>
-    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300">
+    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300 shadow-2xl">
       <div className="container max-w-full mr-auto px-6 md:px-8 lg:px-10 py-5 lg:py-6 md:flex items-center gap-6">
         {/* <!-- Logo --> */}
         <div className="flex items-center justify-between md:w-auto w-full">
