@@ -1,4 +1,3 @@
-import { Kanit } from "next/font/google";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -16,6 +15,7 @@ const config: Config = {
       },
       fontFamily: {
         Kanit: ['"Kanit"', "sans-serif"],
+        Permanent_Marker: ['"Permanent_Marker"', "sans-serif"],
       },
     },
   },

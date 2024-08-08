@@ -1,7 +1,13 @@
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image, { StaticImageData } from "next/image";
 
-export default function Navbar() {
+interface NavbarProps {
+  logoImage: StaticImageData;
+}
+
+
+export default function Navbar({logoImage}: NavbarProps) {
+
   return (
     // <nav className="sticky top-0 z-50 bg-purple-900 shadow-md w-full">
     //   <div className="mx-auto px-6 md:px-8 lg:px-10 py-6 lg:py-8">
@@ -22,13 +28,13 @@ export default function Navbar() {
     //     </div>
     //   </div>
     // </nav>
-    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300 font-Permanent_Marker">
+    <nav className="bg-purple-900 sticky top-0 z-50 w-full text-amber-300">
       <div className="container max-w-full mr-auto px-6 md:px-8 lg:px-10 py-5 lg:py-6 md:flex items-center gap-6">
         {/* <!-- Logo --> */}
         <div className="flex items-center justify-between md:w-auto w-full">
           <Image
             className="lg:w-14"
-            src="/feather_yellow.png"
+            src={logoImage}
             alt="small logo feather yellow"
             width={45}
             height={45}
