@@ -1,7 +1,8 @@
 import Navbar from "../../components/Navbar";
 import React from "react";
 import logoYellow from "../../public/feather_yellow.png";
-import Image from 'next/image'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
 export default function Jdforms() {
   return (
@@ -11,16 +12,26 @@ export default function Jdforms() {
         <main className="flex flex-col items-center justify-center py-10">
           <div className="flex flex-col items-center">
             <div className="md:py-5 lg:py-10">
-              <p className="px-20 lg:px-52 text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
-                Interested in my project?
-              </p>
-              <p className="px-20 lg:px-52 text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
-                Get in touch!
-              </p>
-              <div>
-                <p className="px-20 lg:px-52 text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
+              <div className="flex flex-col items-center justify-center py-10 gap-8">
+                <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
+                  Interested in this project?
+                </p>
+                <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
+                  Get in touch!
+                </p>
+              </div>
+              <div className="flex flex-row items-center justify-center py-10 gap-4">
+                <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
                   LinkedIn
                 </p>
+                <a href="https://www.linkedin.com/in/dom-loparco/">
+                  <FontAwesomeIcon 
+                    icon={faLinkedin} 
+                    style={{color: "#0a66c2",}}
+                    width={50}
+                    height={50}
+                  />
+                </a>
               </div>
             </div>
           </div>
