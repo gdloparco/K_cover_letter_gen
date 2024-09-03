@@ -3,8 +3,10 @@ import React from "react";
 import logoYellow from "../../public/feather_yellow.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import Image from 'next/image'
 
-export default function Jdforms() {
+
+export default function Contact() {
   return (
     <div>
       <Navbar logoImage={logoYellow} />
@@ -28,6 +30,20 @@ export default function Jdforms() {
                   <FontAwesomeIcon 
                     icon={faLinkedin} 
                     style={{color: "#0a66c2",}}
+                    width={50}
+                    height={50}
+                  />
+                </a>
+              </div>
+              <div className="flex flex-row items-center justify-center py-10 gap-4">
+                <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
+                  gdloparco.com
+                </p>
+                <a href="https://www.gdloparco.com/">
+                  <Image 
+                    src={'../../public/website-logo.png'}
+                    // BROKEN HERE ABOVE FOR LINK
+                    alt="small dom website logo"
                     width={50}
                     height={50}
                   />
