@@ -12,8 +12,8 @@ export default function Navbar({logoImage}: NavbarProps) {
 
   let Links =[
     {name: 'Home', link: '/'},
-    {name: 'About', link: '/'},
-    {name: 'Contact', link: '/'},
+    {name: 'About', link: '/about'},
+    {name: 'Contact', link: '/contact'},
   ]
 
   let [isOpen, setisOpen] = useState(false)
@@ -50,7 +50,7 @@ export default function Navbar({logoImage}: NavbarProps) {
             {
               Links.map(link => (
               <li className='my-7 md:my-0 md:ml-8'>
-                <a href='/'>{link.name}</a>
+                <a href={link.link}>{link.name}</a>
               </li>))
             }
           </ul>

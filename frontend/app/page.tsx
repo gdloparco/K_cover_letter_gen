@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 import Image from "next/image";
 import logoYellow from '../public/feather_yellow.png'
 import logoPurple from '../public/feather_purple.png'
