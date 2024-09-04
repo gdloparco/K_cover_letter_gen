@@ -22,7 +22,7 @@ export default function Contact() {
                   Get in touch!
                 </p>
               </div>
-              <div className="flex flex-row items-center justify-center py-10 gap-4">
+              <div className="flex flex-row items-center justify-center py-4 gap-4">
                 <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
                   LinkedIn
                 </p>
@@ -35,13 +35,13 @@ export default function Contact() {
                   />
                 </a>
               </div>
-              <div className="flex flex-row items-center justify-center py-10 gap-4">
+              <div className="flex flex-row items-center justify-center py-4 gap-4">
                 <p className="text-center text-xl md:text-2xl lg:text-3xl max-w-max text-stone-800">
                   gdloparco.com
                 </p>
                 <a href="https://www.gdloparco.com/">
                   <Image 
-                    src={'../../public/website-logo.png'}
+                    src='/website-logo.png'
                     // BROKEN HERE ABOVE FOR LINK
                     alt="small dom website logo"
                     width={50}
