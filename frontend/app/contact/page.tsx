@@ -1,4 +1,5 @@
 import Navbar from "../../components/Navbar";
+import ContactForm from "../../components/ContactForm";
 import React from "react";
 import logoYellow from "../../public/feather_yellow.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,7 +44,6 @@ export default function Contact() {
                     <Image
                       className="md:scale-125 lg:scale-150"
                       src="/website-logo.png"
-                      // BROKEN HERE ABOVE FOR LINK
                       alt="small dom website logo"
                       width={35}
                       height={35}
@@ -66,6 +66,7 @@ export default function Contact() {
                 </div>
               </div>
             </div>
+            <ContactForm />
         </main>
       </div>
     </div>
