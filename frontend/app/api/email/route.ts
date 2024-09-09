@@ -7,22 +7,21 @@ export async function POST(request: NextRequest) {
 
   const transport = nodemailer.createTransport({
     service: 'gmail',
-    /* 
-      setting service as 'gmail' is same as providing these setings:
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true
-  */
     auth: {
-      user: process.env.contact_form_email,
-      pass: process.env.contact_form_password,
+      user: process.env.MY_EMAIL,
+      pass: process.env.MY_PASSWORD,
+    },
+    tls: {
+        rejectUnauthorized: false, // This allows self-signed certificates
     },
   });
 
+  console.log(process.env.MY_EMAIL, process.env.MY_PASSWORD);
+
   const mailOptions: Mail.Options = {
-    from: process.env.contact_form_email,
-    to: process.env.contact_form_email,
-    cc: email,
+    from: process.env.MY_EMAIL,
+    to: process.env.MY_EMAIL,
+    // cc: email, (uncomment this line if you want to send a copy to the sender)
     subject: `Message from ${name} (${email})`,
     text: message,
   };
@@ -42,6 +41,7 @@ export async function POST(request: NextRequest) {
     await sendMailPromise();
     return NextResponse.json({ message: 'Email sent' });
   } catch (err) {
+    console.error('Error somewhere sending email:', err);
     return NextResponse.json({ error: err }, { status: 500 });
   }
 }
