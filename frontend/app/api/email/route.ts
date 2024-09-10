@@ -3,6 +3,9 @@ import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 
 export async function POST(request: NextRequest) {
+
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   const { email, name, message } = await request.json();
 
   const transport = nodemailer.createTransport({
@@ -12,8 +15,8 @@ export async function POST(request: NextRequest) {
       pass: process.env.MY_PASSWORD,
     },
     tls: {
-      // This allows self-signed certificates
-      rejectUnauthorized: false,
+      // This allows self-signed certificates in development environment only
+      rejectUnauthorized: !isDevelopment,
     },
   });
 
