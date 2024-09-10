@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
 
   const mailOptions: Mail.Options = {
     from: process.env.MY_EMAIL,
-    to: process.env.MY_EMAIL,
-    // cc: email, (uncomment this line if you want to send a copy to the sender)
-    subject: `Message from ${name} (${email})`,
-    text: message,
+    to: email,
+    bcc: process.env.MY_EMAIL,
+    subject: `Thank you for your interest, ${name}`,
+    text: `This is a copy of your submission on Kate.\nThank you for getting in touch, we wil get back to you as soon as possible.\n\n${message}`,
   };
 
   const sendMailPromise = () =>
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     await sendMailPromise();
     return NextResponse.json({ message: "Email sent" });
   } catch (err) {
-    console.error("Error somewhere sending email:", err);
+    console.error("Error sending email:", err);
     return NextResponse.json({ error: err }, { status: 500 });
   }
 }
