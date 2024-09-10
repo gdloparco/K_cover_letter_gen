@@ -2,7 +2,7 @@ import Navbar from "../../components/Navbar";
 import React from "react";
 import logoYellow from "../../public/feather_yellow.png";
 
-export default function Jdforms() {
+export default function Assembler() {
   return (
     <div>
       <Navbar logoImage={logoYellow} />

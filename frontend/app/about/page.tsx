@@ -1,8 +1,8 @@
-import Navbar from "../../components/Navbar";
+import Navbar from "@/components/Navbar";
 import React from "react";
-import logoYellow from "../../public/feather_yellow.png";
+import logoYellow from "@/public/feather_yellow.png";
 
-export default function Jdforms() {
+export default function About() {
   return (
     <div>
       <Navbar logoImage={logoYellow} />
