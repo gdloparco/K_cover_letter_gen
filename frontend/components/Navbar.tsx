@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image, { StaticImageData } from "next/image";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
+import Link from 'next/link'
 
 interface NavbarProps {
   logoImage: StaticImageData;
@@ -25,14 +26,15 @@ export default function Navbar({logoImage}: NavbarProps) {
         {/* Logo  */}
 
         <div className="flex items-center justify-between md:w-auto w-full">
-          <Image
-            className="lg:w-14"
-            src={logoImage}
-            alt="small logo feather yellow"
-            width={45}
-            height={45}
-          />
-
+          <Link href="/">
+            <Image
+              className="lg:w-14"
+              src={logoImage}
+              alt="small logo feather yellow"
+              width={45}
+              height={45}
+            />
+          </Link>
           {/* Mobile Menu Icon  */}
 
           <div onClick={() => setisOpen(!isOpen)} className='w-9 h-9 absolute right-8 top-6 cursor-pointer md:hidden'>
