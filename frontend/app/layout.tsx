@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "K - Cover Letter Generator",
+  title: "Kate",
   description: "Your ultimate job landing tool",
 };
 

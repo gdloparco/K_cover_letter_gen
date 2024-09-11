@@ -6,7 +6,6 @@ import logoPurple from "../public/feather_purple.png";
 import Link from "next/link";
 
 export default function Home() {
-  let AssemblerLink = { name: "Assembler", link: "/assembler" };
 
   return (
     <div>
@@ -33,7 +32,7 @@ export default function Home() {
                 openings.
               </p>
               <p className="px-20 lg:px-52 text-center text-xl md:text-2xl max-w-max text-stone-800">
-                Kate is a user-friendly Cover Letter Generator that simplifies
+                Kate is a user-friendly Cover Letter Assembler that simplifies
                 the process, allowing you to quickly generate personalized cover
                 letters tailored to each job description, based on your
                 preferences.
