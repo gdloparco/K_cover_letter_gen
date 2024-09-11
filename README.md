@@ -1,3 +1,3 @@
-## K
+## Kate
 
-### Cover Letter Generator
+### Cover Letter Assembler

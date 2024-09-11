@@ -27,7 +27,7 @@ export default function About() {
                 Kate is <b>fully containerised</b> and its development allowed
                 me to learn more about the use of Docker. It also provided an
                 opportunity to expand my Frontend skills, leveraging{" "}
-                <b>React and TypeScript</b> to build a responsive and intuitive
+                <b>React, Tailwind and TypeScript</b> to build a responsive and intuitive
                 UI.
               </p>
               <p className="px-10 md:px-20 lg:px-36 mb-6 text-justify text-xl md:text-2xl max-w-max text-stone-800 transition-all duration-500 ease-in md:static md:z-auto leading-7 md:leading-10">
