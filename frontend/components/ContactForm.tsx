@@ -64,7 +64,7 @@ const ContactForm: FC = () => {
           ></textarea>
         </div>
         <div className="flex items-center justify-center">
-          <button className="px-6 py-2 md:mt-6 border-2 border-stone-800 bg-purple-800 text-amber-300 rounded-2xl text-xl md:text-xl lg:text-2xl shadow-lg hover:bg-purple-900">
+          <button className="px-6 py-2 lg:py-3 md:mt-6 border-2 border-stone-800 bg-purple-800 text-amber-300 rounded-2xl text-xl md:text-2xl lg:text-3xl shadow-lg hover:bg-purple-900">
             Submit
           </button>
         </div>
