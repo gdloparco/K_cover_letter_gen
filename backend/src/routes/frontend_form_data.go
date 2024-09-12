@@ -9,5 +9,5 @@ import (
 func setupFrontendFormDataRoutes(baseRouter *gin.RouterGroup) {
 	frontendFormData := baseRouter.Group("/formdata")
 
-	frontendFormData.POST("/company", controllers.LogCompanyFormData)
+	frontendFormData.POST("/company", controllers.ProcessCompanyData)
 }

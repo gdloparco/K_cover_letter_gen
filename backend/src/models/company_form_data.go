@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type CompanyFormData struct {
+type ProcessedCompanyData struct {
 	gorm.Model
 	Username             string `json:"username"`
 	CompanyName          string `json:"company_name"`

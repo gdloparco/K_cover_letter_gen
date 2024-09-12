@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"cl-generator/src/models"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +13,7 @@ type companyFormDataRequestBody struct {
 	JobDescription string `json:"job_description"`
 }
 
-func LogCompanyFormData(ctx *gin.Context) {
+func ProcessCompanyData(ctx *gin.Context) {
 	var requestBody companyFormDataRequestBody
 
 	err := ctx.BindJSON(&requestBody)
@@ -31,7 +30,8 @@ func LogCompanyFormData(ctx *gin.Context) {
 	// Here I should use the details in the request body to process (through services) LLM operations.
 	// The model below should then include the information gathered back (Values) to send to the Frontend.
 
-	newCompanyFormData := models.CompanyFormData{
+	ProcessedCompanyData := models.ProcessedCompanyData{
+		// Below username is now hard-coded. With a log-in system it will be coming from Auth.
 		Username:             "Dom Loparco",
 		CompanyName:          requestBody.CompanyName,
 		CompanyWebsite:       requestBody.CompanyWebsite,
@@ -40,6 +40,5 @@ func LogCompanyFormData(ctx *gin.Context) {
 		WebsiteValues:        "Values Text 2",
 	}
 
-	fmt.Print("INFO BELOW")
-	fmt.Print(newCompanyFormData)
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Company Data Processed", "company_data": ProcessedCompanyData})
 }
