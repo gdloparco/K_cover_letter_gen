@@ -2,6 +2,8 @@
 
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { sendCompanyData } from "@/utils/send-company-data";
+
 
 export type CompanyDetailsFormData = {
   company_name: string;
@@ -13,7 +15,7 @@ const CompanyDetailsForm: FC = () => {
   const { register, handleSubmit, reset } = useForm<CompanyDetailsFormData>();
 
   function onSubmit(data: CompanyDetailsFormData) {
-    // Send info to backend
+    sendCompanyData(data);
     reset();
   }
 
@@ -28,6 +30,7 @@ const CompanyDetailsForm: FC = () => {
             Company Name
           </label>
           <input
+            id="company_name" 
             type="text"
             placeholder="Company Name"
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
@@ -42,6 +45,7 @@ const CompanyDetailsForm: FC = () => {
             Company Website
           </label>
           <input
+            id="company_website" 
             type="company_website"
             placeholder="https://www.company.com/"
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
@@ -56,6 +60,7 @@ const CompanyDetailsForm: FC = () => {
             Job Description
           </label>
           <textarea
+            id="job_description" 
             rows={4}
             placeholder="Paste the Job Description here"
             className="w-full resize-y rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
