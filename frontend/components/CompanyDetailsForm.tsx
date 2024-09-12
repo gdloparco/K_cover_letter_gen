@@ -4,7 +4,6 @@ import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { sendCompanyData } from "@/utils/send-company-data";
 
-
 export type CompanyDetailsFormData = {
   company_name: string;
   company_website: string;
@@ -20,7 +19,11 @@ const CompanyDetailsForm: FC = () => {
   }
 
   return (
-    <div className="bg-amber-300 mt-16 md:mt-20 lg:mt-24 flex flex-col md:block lg:px-16 md:px-10 items-center font-Kanit transition-all duration-500 ease-in md:static md:z-auto">
+    <div className="bg-amber-300 mt-12 lg:mt-10 flex flex-col md:block lg:px-16 md:px-10 items-center font-Kanit transition-all duration-500 ease-in md:static md:z-auto">
+      <p className="w-full px-10 md:px-20 lg:px-36 mb-10 text-center text-base md:text-xl lg:text-2xl text-stone-800 transition-all duration-500 ease-in md:static md:z-auto leading-7 md:leading-10">
+        First of all, let's gather some information about the <b>Company</b> and
+        the <b>Vacancy</b> you are applying for:
+      </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">
           <label
@@ -30,7 +33,7 @@ const CompanyDetailsForm: FC = () => {
             Company Name
           </label>
           <input
-            id="company_name" 
+            id="company_name"
             type="text"
             placeholder="Company Name"
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
@@ -45,7 +48,7 @@ const CompanyDetailsForm: FC = () => {
             Company Website
           </label>
           <input
-            id="company_website" 
+            id="company_website"
             type="company_website"
             placeholder="https://www.company.com/"
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
@@ -60,7 +63,7 @@ const CompanyDetailsForm: FC = () => {
             Job Description
           </label>
           <textarea
-            id="job_description" 
+            id="job_description"
             rows={4}
             placeholder="Paste the Job Description here"
             className="w-full resize-y rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
