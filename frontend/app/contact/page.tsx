@@ -1,7 +1,7 @@
-import Navbar from "../../components/Navbar";
-import ContactForm from "../../components/ContactForm";
+import Navbar from "@/components/Navbar";
+import ContactForm from "@/components/ContactForm";
 import React from "react";
-import logoYellow from "../../public/feather_yellow.png";
+import logoYellow from "@/public/feather_yellow.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faSquareGithub } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
