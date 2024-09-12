@@ -12,9 +12,9 @@ interface NavbarProps {
 export default function Navbar({logoImage}: NavbarProps) {
 
   let Links =[
-    {name: 'Home', link: '/'},
-    {name: 'About', link: '/about'},
-    {name: 'Contact', link: '/contact'},
+    {id: 0, name: 'Home', link: '/'},
+    {id: 1, name: 'About', link: '/about'},
+    {id: 2, name: 'Contact', link: '/contact'},
   ]
 
   let [isOpen, setisOpen] = useState(false)
@@ -51,7 +51,7 @@ export default function Navbar({logoImage}: NavbarProps) {
             ${isOpen ? 'top-12' : 'top-[-350px]'}`}>
             {
               Links.map(link => (
-              <li className='my-7 md:my-0 md:ml-8'>
+              <li key={link.id} className='my-7 md:my-0 md:ml-8'>
                 <a href={link.link}>{link.name}</a>
               </li>))
             }
