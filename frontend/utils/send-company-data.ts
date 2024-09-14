@@ -11,10 +11,10 @@ export function sendCompanyData(data: CompanyDetailsFormData) {
     body: JSON.stringify(data),
   })
     .then((res) => res.json())
-    // .then((response) => {
-        // console.log(response.company_data)
-    //   alert(response.message);
-    // })
+    .then((response) => {
+        console.log(response.company_data)
+      // alert(response.message);
+    })
     .catch((err) => {
       alert(err);
     });
