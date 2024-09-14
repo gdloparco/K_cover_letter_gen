@@ -48,6 +48,13 @@ func ProcessCompanyData(ctx *gin.Context) {
 		return
 	}
 
+	websiteValues, err := services.GetValuesFromWebsite(apiKey, requestBody.CompanyWebsite)
+
+	if err != nil {
+		errors.SendInternalError(ctx, err)
+		return
+	}
+
 	ProcessedCompanyData := models.ProcessedCompanyData{
 		// Below username is now hard-coded. With a log-in system it will be coming from Auth.
 		Username:             "Dom Loparco",
@@ -55,7 +62,7 @@ func ProcessCompanyData(ctx *gin.Context) {
 		CompanyWebsite:       requestBody.CompanyWebsite,
 		JobDescription:       requestBody.JobDescription,
 		JobDescriptionValues: jobDescriptionValues,
-		WebsiteValues:        "Values Text 2",
+		WebsiteValues:        websiteValues,
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Company Data Processed", "company_data": ProcessedCompanyData})

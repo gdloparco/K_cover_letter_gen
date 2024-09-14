@@ -15,3 +15,12 @@ func GetValuesFromJobDescription(apiKey string, jobDescription string) (string, 
 
 	return jobDescriptionValues, nil
 }
+
+func GetValuesFromWebsite(apiKey string, website string) (string, error) {
+
+	fmt.Println(apiKey)
+
+	websiteValues := website + "searched, showing values"
+
+	return websiteValues, nil
+}
