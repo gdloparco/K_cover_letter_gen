@@ -1,15 +1,17 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
+	"cl-generator/src/errors"
 	"cl-generator/src/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type bulletpointRequestBody struct {
 	Bulletpoint string
-	Tag 		string
-	Category 	string
+	Tag         string
+	Category    string
 }
 
 func CreateBulletpoint(ctx *gin.Context) {
@@ -27,14 +29,14 @@ func CreateBulletpoint(ctx *gin.Context) {
 	}
 
 	newBulletpoint := models.Bulletpoint{
-		Bulletpoint: 	requestBody.Bulletpoint,
-		Tag:   			requestBody.Tag,
-		Category: 		requestBody.Category,
+		Bulletpoint: requestBody.Bulletpoint,
+		Tag:         requestBody.Tag,
+		Category:    requestBody.Category,
 	}
 
 	_, err = newBulletpoint.Save()
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 
@@ -45,46 +47,43 @@ func GetAllBulletpoints(ctx *gin.Context) {
 
 	bulletpoint, err := models.FindAllBulletpoints()
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
 }
-
 
 func GetBulletpointsByTag(ctx *gin.Context) {
 	tag := ctx.Param("tag")
 
 	bulletpoint, err := models.FindBulletpointByTag(tag)
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
 }
-
 
 func GetBulletpointsByCategory(ctx *gin.Context) {
 	category := ctx.Param("category")
 
 	bulletpoint, err := models.FindBulletpointByCategory(category)
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"bulletpoint": bulletpoint})
 }
 
-
 func GetSuperhookByTag(ctx *gin.Context) {
 	tag := ctx.Param("tag")
 
 	bulletpoint, err := models.FindSuperhookByTag(tag)
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 
@@ -95,7 +94,7 @@ func GetAllSuperhooks(ctx *gin.Context) {
 
 	superhooks, err := models.FindAllSuperhooks()
 	if err != nil {
-		SendInternalError(ctx, err)
+		errors.SendInternalError(ctx, err)
 		return
 	}
 

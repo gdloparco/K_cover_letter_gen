@@ -1,8 +1,12 @@
 package controllers
 
 import (
+	"cl-generator/src/errors"
 	"cl-generator/src/models"
+	"cl-generator/src/services"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,16 +23,30 @@ func ProcessCompanyData(ctx *gin.Context) {
 	err := ctx.BindJSON(&requestBody)
 	// ctx.BindJSON reads the JSON payload from the request body it parses the JSON payload
 	// and attempts to match the JSON fields with the fields in the requestBody struct
-	// if the JSON payload has a field named "bulletpoint" it assigns the corresponding
-	// value to the Bulletpoint field of the requestBody
+	// if the JSON payload has a field named "CompanyName" it assigns the corresponding
+	// value to the CompanyName field of the requestBody
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
+	fmt.Println("requestBody STARTS")
+	fmt.Println("")
+	fmt.Println(requestBody)
+	fmt.Println("")
+	fmt.Println("requestBody ENDS")
+
 	// Here I should use the details in the request body to process (through services) LLM operations.
 	// The model below should then include the information gathered back (Values) to send to the Frontend.
+	apiKey := os.Getenv("API_KEY")
+
+	jobDescriptionValues, err := services.GetValuesFromJobDescription(apiKey, requestBody.JobDescription)
+
+	if err != nil {
+		errors.SendInternalError(ctx, err)
+		return
+	}
 
 	ProcessedCompanyData := models.ProcessedCompanyData{
 		// Below username is now hard-coded. With a log-in system it will be coming from Auth.
@@ -36,7 +54,7 @@ func ProcessCompanyData(ctx *gin.Context) {
 		CompanyName:          requestBody.CompanyName,
 		CompanyWebsite:       requestBody.CompanyWebsite,
 		JobDescription:       requestBody.JobDescription,
-		JobDescriptionValues: "Values Text 1",
+		JobDescriptionValues: jobDescriptionValues,
 		WebsiteValues:        "Values Text 2",
 	}
 
