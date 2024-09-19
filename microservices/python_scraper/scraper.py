@@ -17,7 +17,7 @@ def get_company_values(homepage_url):
 
     for link in links:
         href = link['href'].lower()
-        
+
         if 'about' in href and not href.endswith('/about') and not href.endswith('/about-us'):
             continue  # Skip any "about-..." links that aren't "about-us"
 
@@ -58,7 +58,7 @@ def get_company_values(homepage_url):
     if extracted_values:
         return extracted_values
     else:
-        return "No Company values found"
+        return "No Company values found "
 
 
 def extract_relevant_paragraphs(text):
