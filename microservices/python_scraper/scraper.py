@@ -3,28 +3,26 @@ from bs4 import BeautifulSoup
 
 # Creating an empty list that will store all extracted values from the website
 extracted_values = []
+    
+# Creating an empty set that will store already searched links (to avoid double searching if link is twice or more in the page)
+processed_links = set()
 
 def get_company_values(homepage_url):
     response = requests.get(homepage_url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
     # Looking for common links that may lead to company values.
-    possible_keywords = ['about', 'values', 'mission', 'culture', 'team', 'careers', 'about-us', 'what-we-do']
+    sublinks = ['about', 'values', 'mission', 'culture', 'team', 'careers', 'about-us', 'what-we-do', 'purpose', 'jobs', 'manifesto', 'impact']
     links = soup.find_all('a', href=True)
 
-    # Creating an empty set that will store already searched links (to avoid double searching if link is twice or more in the page)
-    processed_links = set()
+
 
     for link in links:
-        href = link['href'].lower()
 
-        # Skip any "about-..." links that aren't "about" or "about-us" to avoid unwanted information
-        if 'about' in href and not href.endswith('/about') and not href.endswith('/about-us'):
-            continue  
-
-        if any(keyword in link['href'].lower() for keyword in possible_keywords):
+        if any(keyword in link['href'].lower() for keyword in sublinks):
 
             values_url = link['href']
+            # print(values_url)
 
             if values_url.startswith('/'):
                 values_url = homepage_url.rstrip('/') + values_url
@@ -39,6 +37,7 @@ def get_company_values(homepage_url):
             # Scrape the identified link page
             values_page = requests.get(values_url)
             values_soup = BeautifulSoup(values_page.text, 'html.parser')
+            # print(values_page.text)
             
             # Search for company values text in this page.
             text = values_soup.get_text()
@@ -48,6 +47,8 @@ def get_company_values(homepage_url):
             if values:
                 extracted_values.append(values)
             
+    # print(processed_links)
+
     # Extract text from the main link retrieved fromt the user and search for relevant paragraphs again
     main_page_text = soup.get_text()
     values_main = extract_relevant_paragraphs(main_page_text)
@@ -63,7 +64,7 @@ def get_company_values(homepage_url):
 
 
 def extract_relevant_paragraphs(text):
-    keywords = ['value', 'values', 'our mission', 'ethos', 'belief', 'our culture', 'team culture', 'we are passionate', 'you are', 'you care', 'you feel', 'we believe', 'we want', 'we offer']
+    keywords = ['value', 'values', 'our mission', 'our vision', 'our people', 'ethos', 'belief', 'our culture', 'team', 'team culture', 'we are passionate', "we're passionate", 'we are committed', "we're committed", 'you are', 'you care', 'you feel', 'we believe', 'we want', 'we offer']
 
     lines = text.split('\n')
     values_paragraphs = [line.strip() for line in lines if any(keyword in line.lower() for keyword in keywords)]
@@ -71,8 +72,14 @@ def extract_relevant_paragraphs(text):
 
 # In future usage link will come from the backend when calling for this Python Microservice and extracted data will be sent back to the backend via JSON.
 
-homepage_url = 'https://sedna.com/'
+homepage_url = 'https://octopus.energy/careers/'
 
 company_values = get_company_values(homepage_url)
-for value in company_values:
-    print(value + '\n \n')
+
+print(f"FOUND {len(company_values)} COMPANY VALUES:\n")
+print(company_values)
+
+print(f"\nFROM THE FOLLOWING LINKS:\n {processed_links}:\n")
+
+
+
