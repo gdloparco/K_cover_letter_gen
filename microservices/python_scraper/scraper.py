@@ -25,7 +25,6 @@ def get_company_values(homepage_url):
         if any(keyword in link['href'].lower() for keyword in possible_keywords):
 
             values_url = link['href']
-            print(values_url)
 
             if values_url.startswith('/'):
                 values_url = homepage_url.rstrip('/') + values_url
@@ -70,7 +69,10 @@ def extract_relevant_paragraphs(text):
     values_paragraphs = [line.strip() for line in lines if any(keyword in line.lower() for keyword in keywords)]
     return '\n'.join(values_paragraphs)
 
-# Example usage
+# In future usage link will come from the backend when calling for this Python Microservice and extracted data will be sent back to the backend via JSON.
+
 homepage_url = 'https://sedna.com/'
+
 company_values = get_company_values(homepage_url)
-# print(company_values)
+for value in company_values:
+    print(value + '\n \n')
