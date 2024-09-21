@@ -48,7 +48,14 @@ func ProcessCompanyData(ctx *gin.Context) {
 		return
 	}
 
-	websiteValues, err := services.GetValuesFromWebsite(apiKey, requestBody.CompanyWebsite)
+	scrapedWebsiteValues, err := services.FindValuesFromWebsite(requestBody.CompanyName, requestBody.CompanyWebsite)
+
+	if err != nil {
+		errors.SendInternalError(ctx, err)
+		return
+	}
+
+	refinedWebsiteValues, err := services.RefineValuesFromScraper(apiKey, scrapedWebsiteValues)
 
 	if err != nil {
 		errors.SendInternalError(ctx, err)
@@ -62,7 +69,7 @@ func ProcessCompanyData(ctx *gin.Context) {
 		CompanyWebsite:       requestBody.CompanyWebsite,
 		JobDescription:       requestBody.JobDescription,
 		JobDescriptionValues: jobDescriptionValues,
-		WebsiteValues:        websiteValues,
+		WebsiteValues:        refinedWebsiteValues,
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Company Data Processed", "company_data": ProcessedCompanyData})
