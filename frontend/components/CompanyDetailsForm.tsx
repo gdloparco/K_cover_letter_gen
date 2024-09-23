@@ -6,7 +6,7 @@ import { sendCompanyData } from "@/utils/send-company-data";
 
 export type CompanyDetailsFormData = {
   company_name: string;
-  company_website: string;
+  company_website_url: string;
   job_description: string;
 };
 
@@ -42,17 +42,17 @@ const CompanyDetailsForm: FC = () => {
         </div>
         <div className="mb-5">
           <label
-            htmlFor="company_website"
+            htmlFor="company_name"
             className="mb-3 block text-lg md:text-xl lg:text-2xl font-medium text-stone-800"
           >
             Company Website
           </label>
           <input
-            id="company_website"
-            type="company_website"
+            id="company_website_url"
+            type="company_website_url"
             placeholder="https://www.company.com/"
             className="w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md"
-            {...register("company_website", { required: true })}
+            {...register("company_website_url", { required: true })}
           />
         </div>
         <div className="mb-5">

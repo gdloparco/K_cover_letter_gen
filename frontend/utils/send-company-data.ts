@@ -1,6 +1,7 @@
 import { CompanyDetailsFormData } from '@/components/CompanyDetailsForm';
 
 export function sendCompanyData(data: CompanyDetailsFormData) {
+  console.log(data)
   const apiEndpoint = 'http://localhost:8083/formdata/company';
 
   fetch(apiEndpoint, {
@@ -12,7 +13,7 @@ export function sendCompanyData(data: CompanyDetailsFormData) {
   })
     .then((res) => res.json())
     .then((response) => {
-        console.log(response.company_data)
+        console.log(response)
       // alert(response.message);
     })
     .catch((err) => {
