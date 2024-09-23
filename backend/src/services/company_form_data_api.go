@@ -1,7 +1,9 @@
 package services
 
 import (
+	"bytes"
 	"cl-generator/src/errors"
+	"cl-generator/src/models"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -19,9 +21,48 @@ func GetValuesFromJobDescription(apiKey string, jobDescription string) (string, 
 	return jobDescriptionValues, nil
 }
 
-func FindValuesFromWebsite(companyName, website string) (string, error) {
-	// This one calls the Python Scraper
-	return "string", nil
+func FindValuesFromWebsite(companyName, websiteUrl string) (string, []string, error) {
+
+	// This one calls the Python Scraper Container with its name (localhost doesn't work)
+	scraperURL := "http://python_scraper:8085/get-company-values"
+
+	// Create a map to hold the request data
+	reqData := map[string]string{
+		"company_name":        companyName,
+		"company_website_url": websiteUrl,
+	}
+
+	fmt.Println(reqData)
+
+	// Convert the map to JSON
+	reqBody, err := json.Marshal(reqData)
+	fmt.Println(reqBody)
+	if err != nil {
+		return "", nil, err
+	}
+
+	// Create a new POST request
+	resp, err := http.Post(scraperURL, "application/json", bytes.NewBuffer(reqBody))
+	if err != nil {
+		return "", nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil, err
+	}
+
+	// Unmarshal the response body into a ScraperResponse struct
+	var scraperResp models.PythonScraperResponse
+	if err := json.Unmarshal(body, &scraperResp); err != nil {
+		return "", nil, err
+	}
+
+	// Return the extracted values and searched links
+
+	return scraperResp.RawCompanyValues, scraperResp.SearchedLinks, nil
 }
 
 func RefineValuesFromScraper(apiKey, rawCompanyValues string) (string, error) {
