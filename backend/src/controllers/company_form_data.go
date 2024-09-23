@@ -4,7 +4,6 @@ import (
 	"cl-generator/src/errors"
 	"cl-generator/src/models"
 	"cl-generator/src/services"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -30,12 +29,6 @@ func ProcessCompanyData(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-
-	fmt.Println("requestBody STARTS")
-	fmt.Println("")
-	fmt.Println(requestBody)
-	fmt.Println("")
-	fmt.Println("requestBody ENDS")
 
 	// Here I should use the details in the request body to process (through services) scraping and LLM operations.
 	// The model below should then include the information gathered back (Values) to send to the Frontend.

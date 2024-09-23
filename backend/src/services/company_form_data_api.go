@@ -32,11 +32,8 @@ func FindValuesFromWebsite(companyName, websiteUrl string) (string, []string, er
 		"company_website_url": websiteUrl,
 	}
 
-	fmt.Println(reqData)
-
 	// Convert the map to JSON
 	reqBody, err := json.Marshal(reqData)
-	fmt.Println(reqBody)
 	if err != nil {
 		return "", nil, err
 	}
