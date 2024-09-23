@@ -60,7 +60,8 @@ class CompanyDataRepository:
             self.extracted_values.append(values_main)
 
         if self.extracted_values:
-            return self.extracted_values
+            final_values = " ".join(self.extracted_values)
+            return final_values
         else:
             return "No Company values found"
 

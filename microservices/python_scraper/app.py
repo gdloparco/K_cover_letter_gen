@@ -9,16 +9,16 @@ repository = CompanyDataRepository()
 def get_company_values():
     data = request.json
     company_name = data.get('company_name')
-    website_url = data.get('website_url')
+    website_url = data.get('company_website_url')
 
     if not company_name or not website_url:
-        return jsonify({"error": "company_name and website_url are required"}), 400
+        return jsonify({"error": "company_name and company_website_url are required"}), 400
 
     company_data = repository.create_company_data(company_name, website_url)
 
     return jsonify({
         "company_name": company_data.company_name,
-        "website_url": company_data.website_url,
+        "company_website_url": company_data.website_url,
         "extracted_values": company_data.extracted_values,
         "searched_links": company_data.searched_links
     })
