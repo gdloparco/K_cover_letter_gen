@@ -13,7 +13,7 @@ import (
 
 type companyFormDataRequestBody struct {
 	CompanyName    string `json:"company_name"`
-	CompanyWebsite string `json:"company_website"`
+	CompanyWebsite string `json:"company_website_url"`
 	JobDescription string `json:"job_description"`
 }
 
@@ -37,7 +37,7 @@ func ProcessCompanyData(ctx *gin.Context) {
 	fmt.Println("")
 	fmt.Println("requestBody ENDS")
 
-	// Here I should use the details in the request body to process (through services) LLM operations.
+	// Here I should use the details in the request body to process (through services) scraping and LLM operations.
 	// The model below should then include the information gathered back (Values) to send to the Frontend.
 	apiKey := os.Getenv("API_KEY")
 
@@ -48,19 +48,19 @@ func ProcessCompanyData(ctx *gin.Context) {
 		return
 	}
 
-	scrapedWebsiteValues, err := services.FindValuesFromWebsite(requestBody.CompanyName, requestBody.CompanyWebsite)
+	scrapedWebsiteValues, searchedLinks, err := services.FindValuesFromWebsite(requestBody.CompanyName, requestBody.CompanyWebsite)
 
 	if err != nil {
 		errors.SendInternalError(ctx, err)
 		return
 	}
 
-	refinedWebsiteValues, err := services.RefineValuesFromScraper(apiKey, scrapedWebsiteValues)
+	// refinedWebsiteValues, err := services.RefineValuesFromScraper(apiKey, scrapedWebsiteValues)
 
-	if err != nil {
-		errors.SendInternalError(ctx, err)
-		return
-	}
+	// if err != nil {
+	// 	errors.SendInternalError(ctx, err)
+	// 	return
+	// }
 
 	ProcessedCompanyData := models.ProcessedCompanyData{
 		// Below username is now hard-coded. With a log-in system it will be coming from Auth.
@@ -69,7 +69,9 @@ func ProcessCompanyData(ctx *gin.Context) {
 		CompanyWebsite:       requestBody.CompanyWebsite,
 		JobDescription:       requestBody.JobDescription,
 		JobDescriptionValues: jobDescriptionValues,
-		WebsiteValues:        refinedWebsiteValues,
+		// WebsiteValues:        refinedWebsiteValues,
+		WebsiteValues: scrapedWebsiteValues,
+		SearchedLinks: searchedLinks,
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Company Data Processed", "company_data": ProcessedCompanyData})
