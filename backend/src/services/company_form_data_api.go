@@ -16,7 +16,7 @@ func GetValuesFromJobDescription(apiKey, jobDescription string) (string, error) 
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	// Create the prompt for the OpenAI API request
-	prompt := fmt.Sprintf("I'd like to extract company values from the following Job Description if present. With 'company values' I mean: ethos, culture, philosophy about the workplace, not perks and details about the job position. If you cannot find company values, just respond with a simple 'JOB VALUES NOT FOUND' in capital letters. If, on the other hand, you can find values in the job description, I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the Job Description: %s.", jobDescription)
+	prompt := fmt.Sprintf("I'd like to extract company values from the following Job Description if present. With 'company values' I mean: ethos, culture, philosophy about the workplace, not perks and details about the job position. If you cannot find company values, just respond with a simple 'COMPANY VALUES NOT FOUND' in capital letters. If, on the other hand, you can find values in the job description, I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the Job Description: %s.", jobDescription)
 
 	payload := map[string]interface{}{
 		"model":       "gpt-4o-mini",
@@ -122,7 +122,7 @@ func RefineValuesFromScraper(apiKey, rawCompanyValues string) (string, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	// Create the prompt for the OpenAI API request
-	prompt := fmt.Sprintf("Assume the text provided has been obtained by web scraping a company website for information about the company values, ethos and philosophy. I'd like to extract company values from the text, which might include also irrelevant information. I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the text: %s. If you cannot find company values, just respond with a simple 'NOT FOUND' in capital letters.", rawCompanyValues)
+	prompt := fmt.Sprintf("Assume the text provided has been obtained by web scraping a company website for information about the company values, ethos and philosophy. I'd like to extract company values from the text, which might include also irrelevant information. If you cannot find company values, just respond with a simple 'COMPANY VALUES NOT FOUND' in capital letters. If, on the other hand, you can find values in the text provided, I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the text: %s.", rawCompanyValues)
 
 	payload := map[string]interface{}{
 		"model":       "gpt-4o-mini",
