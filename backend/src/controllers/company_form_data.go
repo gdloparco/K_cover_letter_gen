@@ -22,7 +22,7 @@ func ProcessCompanyData(ctx *gin.Context) {
 	err := ctx.BindJSON(&requestBody)
 	// ctx.BindJSON reads the JSON payload from the request body it parses the JSON payload
 	// and attempts to match the JSON fields with the fields in the requestBody struct
-	// if the JSON payload has a field named "CompanyName" it assigns the corresponding
+	// if the JSON payload has a field named "company_name" it assigns the corresponding
 	// value to the CompanyName field of the requestBody
 
 	if err != nil {
@@ -30,8 +30,6 @@ func ProcessCompanyData(ctx *gin.Context) {
 		return
 	}
 
-	// Here I should use the details in the request body to process (through services) scraping and LLM operations.
-	// The model below should then include the information gathered back (Values) to send to the Frontend.
 	apiKey := os.Getenv("API_KEY")
 
 	jobDescriptionValues, err := services.GetValuesFromJobDescription(apiKey, requestBody.JobDescription)
@@ -48,12 +46,12 @@ func ProcessCompanyData(ctx *gin.Context) {
 		return
 	}
 
-	// refinedWebsiteValues, err := services.RefineValuesFromScraper(apiKey, scrapedWebsiteValues)
+	refinedWebsiteValues, err := services.RefineValuesFromScraper(apiKey, scrapedWebsiteValues)
 
-	// if err != nil {
-	// 	errors.SendInternalError(ctx, err)
-	// 	return
-	// }
+	if err != nil {
+		errors.SendInternalError(ctx, err)
+		return
+	}
 
 	ProcessedCompanyData := models.ProcessedCompanyData{
 		// Below username is now hard-coded. With a log-in system it will be coming from Auth.
@@ -62,9 +60,8 @@ func ProcessCompanyData(ctx *gin.Context) {
 		CompanyWebsite:       requestBody.CompanyWebsite,
 		JobDescription:       requestBody.JobDescription,
 		JobDescriptionValues: jobDescriptionValues,
-		// WebsiteValues:        refinedWebsiteValues,
-		WebsiteValues: scrapedWebsiteValues,
-		SearchedLinks: searchedLinks,
+		WebsiteValues:        refinedWebsiteValues,
+		SearchedLinks:        searchedLinks,
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Company Data Processed", "company_data": ProcessedCompanyData})

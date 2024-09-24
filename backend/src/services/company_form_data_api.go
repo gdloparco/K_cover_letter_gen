@@ -8,13 +8,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
+	"time"
 )
 
 // GetValuesFromJobDescription will extract Company Values from the Job Description using a OpenAI API
 func GetValuesFromJobDescription(apiKey string, jobDescription string) (string, error) {
-
-	fmt.Println(apiKey)
 
 	jobDescriptionValues := jobDescription + "modified, showing only values"
 
@@ -34,6 +32,7 @@ func FindValuesFromWebsite(companyName, websiteUrl string) (string, []string, er
 
 	// Convert the map to JSON
 	reqBody, err := json.Marshal(reqData)
+
 	if err != nil {
 		return "", nil, err
 	}
@@ -58,19 +57,30 @@ func FindValuesFromWebsite(companyName, websiteUrl string) (string, []string, er
 	}
 
 	// Return the extracted values and searched links
-
 	return scraperResp.RawCompanyValues, scraperResp.SearchedLinks, nil
 }
 
 func RefineValuesFromScraper(apiKey, rawCompanyValues string) (string, error) {
-	client := &http.Client{}
+	client := &http.Client{Timeout: 10 * time.Second}
 
 	// Create the prompt for the OpenAI API request
-	prompt := fmt.Sprintf("I'd like to extract company values from the following text. I'd like your output to be a simple HTML format so that I can then directly include it in a <div>, you don't need to put it into a div, just start with a <ul>. I'd like the values to be bulletpoints with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Don't include sources. %s", rawCompanyValues)
-	payload := fmt.Sprintf(`{"model": "gpt-3.5-turbo-instruct", "prompt": "%s", "max_tokens": 1000}`, prompt)
+	prompt := fmt.Sprintf("Assume the text provided has been obtained by web scraping a company website for information about the company values, ethos and philosophy. I'd like to extract company values from the text, which might include also irrelevant information. I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the text: %s", rawCompanyValues)
+
+	payload := map[string]interface{}{
+		"model":       "gpt-4o-mini",
+		"messages":    []map[string]string{{"role": "user", "content": prompt}},
+		"temperature": 0.4,
+		"max_tokens":  1500,
+	}
+
+	// Convert the payload to a JSON request Body
+	reqBody, err := json.Marshal(payload)
+	if err != nil {
+		errors.SendInternalError(nil, fmt.Errorf("error marshalling JSON: %v", err))
+	}
 
 	// Create a new POST request to the OpenAI API
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/completions", strings.NewReader(payload))
+	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewReader(reqBody))
 	if err != nil {
 		errors.SendInternalError(nil, fmt.Errorf("error creating request: %v", err))
 	}
@@ -84,32 +94,33 @@ func RefineValuesFromScraper(apiKey, rawCompanyValues string) (string, error) {
 	if err != nil {
 		errors.SendInternalError(nil, fmt.Errorf("error sending request: %v", err))
 	}
+
 	// The HTTP specification expects that clients will close response bodies when they are done reading them.
 	// Network connections and response bodies consume system resources. If not closed, these resources remain allocated,
 	// causing the application to fail to make new requests.
 	defer resp.Body.Close()
 
-	// Read the response body
-	var responseBody strings.Builder
-	if _, err := io.Copy(&responseBody, resp.Body); err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error reading response body: %v", err))
-	}
-
 	// Define the structure for the response
 	type Response struct {
-		RefinedCompanyValues string `json:"refined_company_values"`
+		Choices []struct {
+			Message struct {
+				RefinedCompanyValues string `json:"content"`
+			} `json:"message"`
+			FinishReason string `json:"finish_reason"`
+		} `json:"choices"`
 	}
 
 	var response Response
-	// After an instance of Response is created, unmarshal the responseBody into the instance.
-	// Unmarshalling takes JSON-encoded data (a []byte slice) and decodes it into a Go data structure, such as a struct, map, slice, or array.
-	if err := json.Unmarshal([]byte(responseBody.String()), &response); err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error unmarshaling response: %v", err))
 
+	// The NewDecoder.Decode method will parse the incoming JSON and convert it into a Go struct (response)
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return "", err
 	}
-	//Removing square brackets as the prompt doesnt always eliminate them
-	refinedCompanyValues := strings.ReplaceAll(response.RefinedCompanyValues, "[", "")
-	refinedCompanyValues = strings.ReplaceAll(refinedCompanyValues, "]", "")
+
+	refinedCompanyValues := response.Choices[0].Message.RefinedCompanyValues
+
+	// // Substitution string to use
+	// // refinedCompanyValues = strings.ReplaceAll(refinedCompanyValues, "]", "")
 
 	return refinedCompanyValues, nil
 }
