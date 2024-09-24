@@ -20,7 +20,7 @@ def get_company_values():
         "company_name": company_data.company_name,
         "company_website_url": company_data.website_url,
         "extracted_values": company_data.extracted_values,
-        "searched_links": company_data.searched_links
+        "searched_links": company_data.searched_links,
     })
 
 if __name__ == '__main__':

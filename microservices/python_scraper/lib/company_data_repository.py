@@ -12,6 +12,11 @@ class CompanyDataRepository:
         self.searched_links = []
 
     def get_company_values(self, website_url):
+
+        # Clear lists before processing a new request
+        self.extracted_values.clear()
+        self.searched_links.clear()
+
         response = requests.get(website_url)
         soup = BeautifulSoup(response.text, 'html.parser')
         
@@ -59,11 +64,8 @@ class CompanyDataRepository:
         if values_main:
             self.extracted_values.append(values_main)
 
-        if self.extracted_values:
-            final_values = " ".join(self.extracted_values)
-            return final_values
-        else:
-            return "No Company values found"
+        final_values = " ".join(self.extracted_values) if self.extracted_values else "No Company values found"
+        return final_values
 
 
     def extract_relevant_paragraphs(self, text):
