@@ -44,7 +44,7 @@ export default function About() {
             </div>
             <Link href="/assembler">
               <button className="px-6 py-2 my-6 lg:py-3 border-2 border-stone-800 bg-purple-800 text-amber-300 rounded-2xl text-xl md:text-2xl lg:text-3xl shadow-lg hover:bg-purple-900 transition-all duration-500 ease-in md:static md:z-auto">
-                Get <s className="decoration-4"> rejections</s> faster, with Kate.
+                Get faster, with Kate.
               </button>
             </Link>
           </div>
