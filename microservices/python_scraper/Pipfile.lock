@@ -457,11 +457,12 @@
         },
         "werkzeug": {
             "hashes": [
-                "sha256:02c9eb92b7d6c06f31a782811505d2157837cea66aaede3e217c7c27c039476c",
-                "sha256:34f2371506b250df4d4f84bfe7b0921e4762525762bbd936614909fe25cd7306"
+                "sha256:2ad50fb9ed09cc3af22c54698351027ace879a0b60a3b5edf5730b2f7d876905",
+                "sha256:cd3cd98b1b92dc3b7b3995038826c68097dcb16f9baa63abe35f20eafeb9fe5e"
             ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.0.4"
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==3.1.4"
         }
     },
     "develop": {}
