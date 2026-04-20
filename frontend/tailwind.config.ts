@@ -17,6 +17,15 @@ const config: Config = {
         Kanit: ['"Kanit"', "sans-serif"],
         Permanent_Marker: ['"Permanent_Marker"', "sans-serif"],
       },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.25s ease-out both",
+      },
     },
   },
   plugins: [],

@@ -1,22 +1,29 @@
-import { CompanyDetailsFormData } from '@/components/CompanyDetailsForm';
+import type { FormData as CoverLetterFormData } from "@/components/CompanyDetailsForm";
 
-export function sendCompanyData(data: CompanyDetailsFormData) {
-  console.log(data)
-  const apiEndpoint = 'http://localhost:8083/formdata/company';
+export async function submitCoverLetterRequest(
+  data: CoverLetterFormData
+): Promise<Record<string, unknown>> {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8083";
 
-  fetch(apiEndpoint, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-      },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((response) => {
-        console.log(response)
-      // alert(response.message);
-    })
-    .catch((err) => {
-      alert(err);
-    });
+  const form = new FormData();
+  form.append("company_website_url", data.company_website_url);
+  form.append("company_name", data.company_name ?? "");
+  form.append("job_description", data.job_description);
+
+  const resumeFile = data.resume?.[0];
+  if (resumeFile) {
+    form.append("resume", resumeFile, resumeFile.name);
+  }
+
+  const res = await fetch(`${backendUrl}/formdata/cover-letter`, {
+    method: "POST",
+    body: form,
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Request failed (${res.status}): ${text}`);
+  }
+
+  return res.json();
 }

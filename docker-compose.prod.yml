@@ -1,0 +1,50 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kate_frontend
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kate_backend
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./data/
+        target: /data
+    env_file:
+      - ./backend/.env
+    environment:
+      SCRAPER_URL: http://scraper:8085
+      BULLETPOINTS_PATH: /data/bulletpoints.json
+      # Ollama runs on the host machine, not in Docker
+      # On Linux use: http://172.17.0.1:11434
+      # On Mac/Windows use: http://host.docker.internal:11434
+      OLLAMA_URL: http://host.docker.internal:11434
+    ports:
+      - "8083:8082"
+    depends_on:
+      - scraper
+
+  scraper:
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+    container_name: kate_scraper
+    restart: unless-stopped
+    env_file:
+      - ./scraper/.env
+    ports:
+      - "8085:8085"

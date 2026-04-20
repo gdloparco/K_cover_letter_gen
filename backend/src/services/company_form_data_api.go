@@ -2,183 +2,150 @@ package services
 
 import (
 	"bytes"
-	"cl-generator/src/errors"
-	"cl-generator/src/models"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 )
 
-// GetValuesFromJobDescription will extract Company Values from the Job Description using a OpenAI API
-func GetValuesFromJobDescription(apiKey, jobDescription string) (string, error) {
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	// Create the prompt for the OpenAI API request
-	prompt := fmt.Sprintf("I'd like to extract company values from the following Job Description if present. With 'company values' I mean: ethos, culture, philosophy about the workplace, not perks and details about the job position. If you cannot find company values, just respond with a simple 'COMPANY VALUES NOT FOUND' in capital letters. If, on the other hand, you can find values in the job description, I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the Job Description: %s.", jobDescription)
-
-	payload := map[string]interface{}{
-		"model":       "gpt-4o-mini",
-		"messages":    []map[string]string{{"role": "user", "content": prompt}},
-		"temperature": 0.4,
-		"max_tokens":  1500,
+// callLLM sends a prompt to the local Ollama instance and returns the text response.
+// Ollama must be running: `ollama serve` with the model already pulled.
+func callLLM(prompt string) (string, error) {
+	ollamaURL := os.Getenv("OLLAMA_URL")
+	if ollamaURL == "" {
+		ollamaURL = "http://localhost:11434"
+	}
+	model := os.Getenv("OLLAMA_MODEL")
+	if model == "" {
+		model = "llama3.2"
 	}
 
-	// Convert the payload to a JSON request Body
+	client := &http.Client{Timeout: 120 * time.Second}
+
+	payload := map[string]any{
+		"model": model,
+		"messages": []map[string]string{
+			{"role": "user", "content": prompt},
+		},
+		"stream": false,
+		"options": map[string]any{
+			"temperature": 0.4,
+			"num_predict": 900,
+		},
+	}
+
 	reqBody, err := json.Marshal(payload)
 	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error marshalling JSON: %v", err))
+		return "", fmt.Errorf("error marshalling request: %w", err)
 	}
 
-	// Create a new POST request to the OpenAI API
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewReader(reqBody))
+	req, err := http.NewRequest("POST", ollamaURL+"/api/chat", bytes.NewReader(reqBody))
 	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error creating request: %v", err))
+		return "", fmt.Errorf("error creating request: %w", err)
 	}
-
-	// Set the necessary headers for the request
-	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
-	// Send the request to the OpenAI API
 	resp, err := client.Do(req)
 	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error sending request: %v", err))
+		return "", fmt.Errorf("ollama unavailable — is `ollama serve` running? %w", err)
 	}
-
-	// The HTTP specification expects that clients will close response bodies when they are done reading them.
-	// Network connections and response bodies consume system resources. If not closed, these resources remain allocated,
-	// causing the application to fail to make new requests.
 	defer resp.Body.Close()
 
-	// Define the structure for the response
-	type Response struct {
-		Choices []struct {
-			Message struct {
-				RefinedJobDescriptionValues string `json:"content"`
-			} `json:"message"`
-			FinishReason string `json:"finish_reason"`
-		} `json:"choices"`
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading response: %w", err)
 	}
 
-	var response Response
-
-	// The NewDecoder.Decode method will parse the incoming JSON and convert it into a Go struct (response)
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return "", err
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("ollama error %d: %s", resp.StatusCode, string(body))
 	}
 
-	RefinedJobDescriptionValues := response.Choices[0].Message.RefinedJobDescriptionValues
+	type ollamaResponse struct {
+		Message struct {
+			Content string `json:"content"`
+		} `json:"message"`
+	}
 
-	// // Substitution string to use
-	// // refinedCompanyValues = strings.ReplaceAll(refinedCompanyValues, "]", "")
+	var parsed ollamaResponse
+	if err := json.Unmarshal(body, &parsed); err != nil {
+		return "", fmt.Errorf("error parsing response: %w", err)
+	}
+	if parsed.Message.Content == "" {
+		return "", fmt.Errorf("empty response from Ollama")
+	}
 
-	return RefinedJobDescriptionValues, nil
+	return parsed.Message.Content, nil
 }
 
+// GetValuesFromJobDescription extracts company values from a job description.
+func GetValuesFromJobDescription(jobDescription string) (string, error) {
+	prompt := fmt.Sprintf(`Extract company values from the following job description.
+By "company values" I mean: ethos, culture, philosophy about the workplace — not perks or job-specific requirements.
+If you cannot find company values, respond only with: COMPANY VALUES NOT FOUND
+If you find values, respond with a simple HTML list. Start with <ul>. Each value should be a <li> with a 1-2 word label in <b> tags, followed by a colon and a short description.
+Do not include any text outside the HTML.
+
+Job Description:
+%s`, jobDescription)
+
+	return callLLM(prompt)
+}
+
+// FindValuesFromWebsite calls the Python scraper service to extract raw values from a company website.
 func FindValuesFromWebsite(companyName, websiteUrl string) (string, []string, error) {
+	scraperURL := os.Getenv("SCRAPER_URL")
+	if scraperURL == "" {
+		scraperURL = "http://localhost:8085"
+	}
+	scraperURL += "/get-company-values"
 
-	// This one calls the Python Scraper Container with its name (localhost doesn't work)
-	scraperURL := "http://python_scraper:8085/get-company-values"
-
-	// Create a map to hold the request data
 	reqData := map[string]string{
 		"company_name":        companyName,
 		"company_website_url": websiteUrl,
 	}
 
-	// Convert the map to JSON
 	reqBody, err := json.Marshal(reqData)
-
 	if err != nil {
 		return "", nil, err
 	}
 
-	// Create a new POST request
-	resp, err := http.Post(scraperURL, "application/json", bytes.NewBuffer(reqBody))
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Post(scraperURL, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
-		return "", nil, err
+		return "", nil, fmt.Errorf("scraper unavailable: %w", err)
 	}
 	defer resp.Body.Close()
 
-	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", nil, err
 	}
 
-	// Unmarshal the response body into a ScraperResponse struct
-	var scraperResp models.PythonScraperResponse
+	type scraperResponse struct {
+		RawCompanyValues string   `json:"raw_company_values"`
+		SearchedLinks    []string `json:"searched_links"`
+	}
+
+	var scraperResp scraperResponse
 	if err := json.Unmarshal(body, &scraperResp); err != nil {
 		return "", nil, err
 	}
 
-	// Return the extracted values and searched links
 	return scraperResp.RawCompanyValues, scraperResp.SearchedLinks, nil
 }
 
-func RefineValuesFromScraper(apiKey, rawCompanyValues string) (string, error) {
-	client := &http.Client{Timeout: 10 * time.Second}
+// RefineValuesFromScraper cleans up raw scraped text into a formatted HTML values list.
+func RefineValuesFromScraper(rawCompanyValues string) (string, error) {
+	prompt := fmt.Sprintf(`The following text was scraped from a company website and may contain irrelevant content mixed with company values, ethos, and culture statements.
+Extract only the company values from it.
+If you cannot find any company values, respond only with: COMPANY VALUES NOT FOUND
+If you find values, respond with a simple HTML list. Start with <ul>. Each value should be a <li> with a 1-2 word label in <b> tags, followed by a colon and a short description.
+Do not include any text outside the HTML.
 
-	// Create the prompt for the OpenAI API request
-	prompt := fmt.Sprintf("Assume the text provided has been obtained by web scraping a company website for information about the company values, ethos and philosophy. I'd like to extract company values from the text, which might include also irrelevant information. If you cannot find company values, just respond with a simple 'COMPANY VALUES NOT FOUND' in capital letters. If, on the other hand, you can find values in the text provided, I'd like your output to be a simple HTML format. Start the HTML with a <ul>. I'd like the values to be bulletpoints <li> with a one or two word description of the value in bold (use <b> tag), followed by a colon, then followed by the value description. Here's the text: %s.", rawCompanyValues)
+Scraped text:
+%s`, rawCompanyValues)
 
-	payload := map[string]interface{}{
-		"model":       "gpt-4o-mini",
-		"messages":    []map[string]string{{"role": "user", "content": prompt}},
-		"temperature": 0.4,
-		"max_tokens":  1500,
-	}
-
-	// Convert the payload to a JSON request Body
-	reqBody, err := json.Marshal(payload)
-	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error marshalling JSON: %v", err))
-	}
-
-	// Create a new POST request to the OpenAI API
-	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewReader(reqBody))
-	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error creating request: %v", err))
-	}
-
-	// Set the necessary headers for the request
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("Content-Type", "application/json")
-
-	// Send the request to the OpenAI API
-	resp, err := client.Do(req)
-	if err != nil {
-		errors.SendInternalError(nil, fmt.Errorf("error sending request: %v", err))
-	}
-
-	// The HTTP specification expects that clients will close response bodies when they are done reading them.
-	// Network connections and response bodies consume system resources. If not closed, these resources remain allocated,
-	// causing the application to fail to make new requests.
-	defer resp.Body.Close()
-
-	// Define the structure for the response
-	type Response struct {
-		Choices []struct {
-			Message struct {
-				RefinedCompanyValues string `json:"content"`
-			} `json:"message"`
-			FinishReason string `json:"finish_reason"`
-		} `json:"choices"`
-	}
-
-	var response Response
-
-	// The NewDecoder.Decode method will parse the incoming JSON and convert it into a Go struct (response)
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return "", err
-	}
-
-	refinedCompanyValues := response.Choices[0].Message.RefinedCompanyValues
-
-	// // Substitution string to use
-	// // refinedCompanyValues = strings.ReplaceAll(refinedCompanyValues, "]", "")
-
-	return refinedCompanyValues, nil
+	return callLLM(prompt)
 }

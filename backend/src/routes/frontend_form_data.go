@@ -10,4 +10,5 @@ func setupFrontendFormDataRoutes(baseRouter *gin.RouterGroup) {
 	frontendFormData := baseRouter.Group("/formdata")
 
 	frontendFormData.POST("/company", controllers.ProcessCompanyData)
+	frontendFormData.POST("/cover-letter", controllers.GenerateCoverLetter)
 }
