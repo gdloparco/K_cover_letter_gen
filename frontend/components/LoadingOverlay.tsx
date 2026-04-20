@@ -14,16 +14,17 @@ const MESSAGES = [
   "Crafting your opening...",
   "Writing the middle bit...",
   "Polishing the closing lines...",
-  "Running a spell check... just kidding, it's fine",
-  "Asking George to proofread it... George said it's great",
+  "Running a spell check...",
+  "Asking Monica to proofread it...",
+  "Monica said it's great.",
   "Almost there...",
   "Promise, almost ready...",
+  "Look, you are not even paying for this...",
   "Wait, where's my pen...",
   "George, can you get that phone please?",
-  "Still going... grab a coffee",
+  "Still going...",
   "It would have taken you longer to write it by hand anyway...",
-  "Final touches...",
-  "Ok, just kidding, here we are...",
+  "Ok, here we are...",
 ];
 
 const FINAL_INDEX = MESSAGES.length - 1;
@@ -41,7 +42,7 @@ export default function LoadingOverlay() {
         setIndex((i) => Math.min(i + 1, FINAL_INDEX));
         setVisible(true);
       }, 350);
-    }, 2600);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [index]);
